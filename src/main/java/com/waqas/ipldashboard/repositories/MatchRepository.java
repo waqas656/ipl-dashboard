@@ -8,10 +8,11 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface MatchRepository extends CrudRepository<Match, Long> {
+    //the func is used to get latest matches
     List<Match> getAllByTeam1OrTeam2OrderByDateDesc(String teamName1, String teamName2, Pageable pageable);
 
     //java now supports method implementations inside interface using default keyword
     default List<Match> findLatestMatchesOfTeam(String teamName, int matchesListSize){
-        return getAllByTeam1OrTeam2OrderByDateDesc(teamName, teamName, PageRequest.of(0, matchesListSize));
+        return getAllByTeam1OrTeam2OrderByDateDesc(teamName, teamName, PageRequest.of(0, matchesListSize));        //PageRequest.of(pageNumber, sizeOfElementsToReturn) so basically, from 1st page return 4 records
     } //and we are using this default method so our controller looks more clean
 }

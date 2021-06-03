@@ -6,11 +6,13 @@ import com.waqas.ipldashboard.repositories.MatchRepository;
 import com.waqas.ipldashboard.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin //it allows requests from other domains (e.g localhost:3000 to localhost:8080)
 public class TeamController {
 
     private final TeamRepository teamRepository;
