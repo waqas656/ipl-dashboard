@@ -6,10 +6,10 @@ import com.waqas.ipldashboard.repositories.MatchRepository;
 import com.waqas.ipldashboard.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @CrossOrigin //it allows requests from other domains (e.g localhost:3000 to localhost:8080)
@@ -30,6 +30,15 @@ public class TeamController {
         //PageRequest.of(pageNumber, sizeOfElementsToReturn) so basically, from 1st page return 4 records
         team.setMatchList(matchRepository.findLatestMatchesOfTeam(teamName, 4));
         return team;
+    }
+
+    @GetMapping("/teams/{teamName}/matches")
+    public List<Match> getMatchesForTeam(@PathVariable String teamName, @RequestParam int year){ //path variable expects it to be a query parameter
+        LocalDate startDate = LocalDate.of(year, 1, 1); //{year}, 1(January), 1(1st)
+        LocalDate endDate = LocalDate.of(year + 1, 1, 1);
+        List<Match> matchList = matchRepository.findMatchesByTeamNameAndYear(teamName, startDate, endDate);
+        System.out.println("Match Lise Size: " + matchList.size());
+        return matchList;
     }
 
 }
