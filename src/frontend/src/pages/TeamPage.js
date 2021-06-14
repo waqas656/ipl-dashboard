@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import { MatchDetailCard } from '../components/MatchDetailCard';
 import { MatchSmallCard } from '../components/MatchSmallCard';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import './TeamPage.scss';
 import { PieChartComponent } from '../components/PieChartComponent';
 
@@ -17,13 +17,13 @@ export const TeamPage = () => {
         //useEffect is triggered whenever something changes so it leads to infinite loop of calling the callback func if we dont set empty array as second argument
 
         () => {
-            const fetchMatches = async () => {
+            const fetchTeam = async () => {
                 const response = await fetch(`http://localhost:8080/teams/${teamName}`); // we using ` ` quote instead of "" or ''
                 const data = await response.json();
                 setTeam(data);
                 console.log(data);
             }
-            fetchMatches(); //using a function within a function bcos async is not allowed at root level function inside useEffect
+            fetchTeam(); //using a function within a function bcos async is not allowed at root level function inside useEffect
         },
         [teamName] //this tells the effect to happen whenever something (in this case: teamName) changes in this array, so if it is empty then the effect (callback function written above) will happen only once upon first render
     );
@@ -37,7 +37,6 @@ export const TeamPage = () => {
             <div className="team-name-section">
                 <h1 className="team-name">{team.teamName}</h1>
             </div>
-            {console.log("total wins: " + team.totalWins + "\n" + "ToTAL Losses: " + (team.totalMatches - team.totalWins))}
             <div className="win-loss-section">
                 Wins / Losses
                 <PieChartComponent wins={team.totalWins} losses={team.totalMatches - team.totalWins}></PieChartComponent>
@@ -48,12 +47,12 @@ export const TeamPage = () => {
                 <MatchDetailCard teamName={team.teamName} match={team.matchList[0]} /> {/* sending the first entry from matchList array */}
             </div>
 
-            {team.matchList.slice(1).map(match => <MatchSmallCard teamName={team.teamName} match={match} />)} {/*mapping every matchList array entry to MatchSmallCard and passing the entries as "match" into the MatchSmallCard component */}
+            {team.matchList.slice(1).map(match => <MatchSmallCard key={match.id} teamName={team.teamName} match={match} />)} {/*mapping every matchList array entry to MatchSmallCard and passing the entries as "match" into the MatchSmallCard component */}
 
-            {/*In both of above components we are passing 2 argument one is teamName which tells what is the name of the team about whom is that page. */}
+            {/*In both of above components we are passing 2 arguments one is teamName which tells what is the name of the team about whom is that page. */}
 
             <div className="more-link"> 
-                <a href="#">More {'>'}</a> {/* {''} brackets and commas are used to put > symbol at the end of more */}
+            <Link to={`/teams/${teamName}/matches/${process.env.REACT_APP_DATA_END_YEAR}`}>More {'>'}</Link> {/* {''} brackets and commas are used to put > symbol at the end of more */}
             </div>
 
         </div>

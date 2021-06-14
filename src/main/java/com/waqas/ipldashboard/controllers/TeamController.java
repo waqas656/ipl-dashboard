@@ -32,6 +32,11 @@ public class TeamController {
         return team;
     }
 
+    @GetMapping("/teams")
+    public Iterable<Team> getAllTeams(){ //Iterators can be returned and manipulated before the stored data is fully available, whereas a list, or an array for that matter, must be fully populated before it can safely be returned
+        return teamRepository.findAll();
+    }
+
     @GetMapping("/teams/{teamName}/matches")
     public List<Match> getMatchesForTeam(@PathVariable String teamName, @RequestParam int year){ //path variable expects it to be a query parameter
         LocalDate startDate = LocalDate.of(year, 1, 1); //{year}, 1(January), 1(1st)
